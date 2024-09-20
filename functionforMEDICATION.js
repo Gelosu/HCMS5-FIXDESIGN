@@ -248,7 +248,9 @@ function submitAddMedicationForm(event) {
         if (result.success) {
             console.log("Results: ", result);
             closeAddMedicationModal();
-            updateMedicationTable(result.data); // Refresh table with the updated data
+            updateMedicationTable(result.data);
+            updateDashboard();
+            fetchMedicines(); // Refresh table with the updated data
         } else {
             console.log('Error adding medication: ' + result.error);
         }
@@ -489,6 +491,8 @@ function submitEditMedicationForm(event) {
                 console.log("Edit result: ", result);
                 closeEditMedicationModal();
                 updateMedicationTable(result.data);
+                updateDashboard();
+                fetchMedicines();
             } else {
                 alert('Error editing medication: ' + result.error);
             }
@@ -502,7 +506,7 @@ function submitEditMedicationForm(event) {
 
 
 function deleteMedication(medicationId) {
-    if (confirm('Are you sure you want to delete this medication?')) {
+    if (confirm('Are you sure you want to delete this medication? Take note to update the stocks again in MEDICINE INVENTORY.')) {
         fetch('P_MEDICATION/delete_pmedication.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -512,7 +516,9 @@ function deleteMedication(medicationId) {
         .then(result => {
             if (result.success) {
                 console.log("resultsss: ", result.data)
-                updateMedicationTable(result.data); // Refresh table with the updated data
+                updateMedicationTable(result.data);
+                updateDashboard(); 
+                fetchMedicines();// Refresh table with the updated data
             } else {
                 alert('Error deleting medication: ' + result.message);
             }

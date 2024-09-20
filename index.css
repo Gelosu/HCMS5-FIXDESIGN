@@ -34,7 +34,8 @@ header {
 header h1 {
     font-family: 'Raleway', sans-serif;
     font-size: 25px; /* Set the text size to 10px */
-    margin: 0; /* Remove default margin for h1 */
+    margin: 0;
+    color: white; /* Remove default margin for h1 */
 }
 
 main {
@@ -61,7 +62,7 @@ main {
 
 footer {
     background-color: rgb(54, 133, 51);
-    color: black;
+    color: white;
     text-align: center;
     padding: 0.5rem; /* Adjust the padding to make it smaller */
     height: 25px; /* Adjust the height to make it thinner */

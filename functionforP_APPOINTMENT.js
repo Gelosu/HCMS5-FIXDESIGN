@@ -1,5 +1,35 @@
 //APPOINTMENT - BUGGISHHHHHHHHHHH IDKKKKKKKKKKKK
 
+
+function updateDashboard() {
+    fetch('DASHBOARD/get_dashboard_counts.php')
+    .then(response => response.text())  // Fetch the raw text response
+    .then(text => {
+        console.log('Raw Response Text:', text);  // Log the raw text for debugging
+        
+        // Parse the raw text into a JSON object
+        const data = JSON.parse(text);
+        
+        // Update the counts on the dashboard
+        document.getElementById('total-patients').textContent = data.total_patients || 0;
+        document.getElementById('total-medicines').textContent = data.total_meds || 0;
+        document.getElementById('appointments-today').textContent = data.total_appointments || 0;
+        document.getElementById('total-medications').textContent = data.total_medications || 0;
+    })
+    .catch(error => {
+        console.error('Error fetching dashboard data:', error);
+        // Fallback to '0' in case of error
+        document.getElementById('total-patients').textContent = 0;
+        document.getElementById('total-medicines').textContent = 0;
+        document.getElementById('appointments-today').textContent = 0;
+        document.getElementById('total-medications').textContent = 0;
+    });
+}
+
+
+updateDashboard()
+
+
 // Function to open the Add Appointment modal
 function openAddAppointmentModal() {
     // Fetch patient names and populate dropdown
@@ -59,7 +89,8 @@ function submitAddAppointmentForm(event) {
     .then(result => {
         if (result.success) {
             closeAddAppointmentModal();
-            updateAppointmentTable(result.data); // Refresh the table with the updated data
+            updateAppointmentTable(result.data);
+            updateDashboard(); // Refresh the table with the updated data
         } else {
             alert('Error: ' + result.error);
         }
@@ -114,6 +145,8 @@ function updateAppointmentTable(appointments) {
         `;
         tableBody.appendChild(row);
     });
+
+    updateDashboard();
 }
 
 // Function to open the Edit Appointment modal
@@ -161,6 +194,7 @@ function submitEditAppointmentForm(event) {
             if (response.success) {
                 updateAppointmentTable(response.appointments);
                 alert(response.message);
+                updateDashboard();
                 document.getElementById('editAppointmentModal').style.display = 'none';
             } else {
                 alert(response.message);
@@ -199,7 +233,8 @@ function deleteAppointment(appointmentId) {
         })
         .then(data => {
             if (data.success) {
-                updateAppointmentTable(data.appointments); // Refresh the table
+                updateAppointmentTable(data.appointments);
+                updateDashboard(); // Refresh the table
             } else {
                 alert('Error: ' + data.message);
             }

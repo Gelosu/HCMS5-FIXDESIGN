@@ -31,47 +31,56 @@
         </thead>
         <tbody>
         <?php
-        include 'connect.php';
+include 'connect.php';
 
-        $sql = "SELECT * FROM inv_meds";
-        $result = $conn->query($sql);
+$sql = "SELECT * FROM inv_meds";
+$result = $conn->query($sql);
 
-        if ($result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                echo "<tr>";
-                echo "<td><div class='cell-content'>" . $row["meds_number"] . "</div></td>";
-                echo "<td><div class='cell-content'>" . $row["meds_name"] . "</div></td>";
-                echo "<td><div class='cell-content'>" . $row["med_dscrptn"] . "</div></td>";
-                echo "<td><div class='cell-content'>" . $row["stock_in"] . "</div></td>";
-                echo "<td><div class='cell-content'>" . $row["stock_out"] . "</div></td>";
-                echo "<td><div class='cell-content'>" . $row["stock_exp"] . "</div></td>";
-                echo "<td><div class='cell-content'>" . $row["stock_avail"] . "</div></td>";
-                echo "<td class='action-icons'>";
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo "<tr>";
+        echo "<td><div class='cell-content'>" . htmlspecialchars($row["meds_number"]) . "</div></td>";
+        echo "<td><div class='cell-content'>" . htmlspecialchars($row["meds_name"]) . "</div></td>";
+        echo "<td><div class='cell-content'>" . htmlspecialchars($row["med_dscrptn"]) . "</div></td>";
+        echo "<td><div class='cell-content'>" . htmlspecialchars($row["stock_in"]) . "</div></td>";
+        echo "<td><div class='cell-content'>" . htmlspecialchars($row["stock_out"]) . "</div></td>";
+        
+        // Format the expiration date for both display and input
+        $expirationDate = new DateTime($row["stock_exp"]);
+        $formattedExpirationDateForDisplay = $expirationDate->format('F j, Y'); // For display
+        $formattedExpirationDateForInput = $expirationDate->format('Y-m-d'); // For input
+        
+        // Display in the desired format
+        echo "<td><div class='cell-content'>" . $formattedExpirationDateForDisplay . "</div></td>";
+        echo "<td><div class='cell-content'>" . htmlspecialchars($row["stock_avail"]) . "</div></td>";
+        echo "<td class='action-icons'>";
 
-                echo "<a onclick=\"openEditMed('" . 
-                    $row["med_id"] . "', '" . 
-                    $row["meds_number"] . "', '" . 
-                    $row["meds_name"] . "', '" . 
-                    $row["med_dscrptn"] . "', '" . 
-                    $row["stock_in"] . "', '" . 
-                    $row["stock_out"] . "', '" . 
-                    $row["stock_exp"] . "', '" . 
-                    $row["stock_avail"] . "')\">";
+        echo "<a onclick=\"openEditMed('" . 
+            $row["med_id"] . "', '" . 
+            addslashes($row["meds_number"]) . "', '" . 
+            addslashes($row["meds_name"]) . "', '" . 
+            addslashes($row["med_dscrptn"]) . "', '" . 
+            htmlspecialchars($row["stock_in"]) . "', '" . 
+            htmlspecialchars($row["stock_out"]) . "', '" . 
+            $formattedExpirationDateForInput . "', '" .  // Pass the input format
+            htmlspecialchars($row["stock_avail"]) . "')\">";
 
-                echo "<img src='edit_icon.png' alt='Edit' style='width: 20px; height: 20px;'></a>";
+        echo "<img src='edit_icon.png' alt='Edit' style='width: 20px; height: 20px;'></a>";
 
-                echo "<a onclick=\"deleteMedicine('" . $row["med_id"] . "')\">";
-                echo "<img src='delete_icon.png' alt='Delete' class='delete-btn' style='width: 20px; height: 20px;'></a>";
-                
-                echo "</td>";
-                echo "</tr>";
-            }
-        } else {
-            echo "<tr><td colspan='8'>No medicines found</td></tr>";
-        }
+        echo "<a onclick=\"deleteMedicine('" . $row["med_id"] . "')\">";
+        echo "<img src='delete_icon.png' alt='Delete' class='delete-btn' style='width: 20px; height: 20px;'></a>";
+        
+        echo "</td>";
+        echo "</tr>";
+    }
+} else {
+    echo "<tr><td colspan='8'>No medicines found</td></tr>";
+}
 
-        $conn->close();
-        ?>
+
+$conn->close();
+?>
+
         </tbody>
     </table>
 </div>

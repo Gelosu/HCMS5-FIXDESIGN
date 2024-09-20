@@ -1,4 +1,4 @@
-<section id="events" class="section" style="display: none;">
+<section id="events" class="section">
 
 <div class="search-and-add-container">
     <!-- Search bar container -->
@@ -91,8 +91,8 @@
     </div>
             
            <!-- Add Event Modal -->
-<div id="addEventModal" class="modal" style="display: none;">
-    <div class="modal-content">
+<div id="addEventModal" class="modal2">
+    <div class="modal-content2">
         <span class="close" onclick="closeAddEventModal()">&times;</span>
         <h3>Add Event</h3>
         <form id="addEventForm" onsubmit="submitAddEventForm(event)">
@@ -101,8 +101,10 @@
             <input type="text" id="eventName" name="eventName" required><br><br>
 
             <!-- Event Description -->
-            <label for="eventDescription">Event Description:</label>
-            <input type="text" id="eventDescription" name="eventDescription" required><br><br>
+         <!-- Event Description -->
+<label2 id="eventDescriptionLabel" for="eventDescription">Event Description:</label2>
+<textarea id="eventDescription" name="eventDescription" rows="5" required></textarea><br><br>
+
 
             <!-- Date and Time -->
             <label for="eventDateTime">Date and Time:</label>
@@ -116,8 +118,8 @@
 
 
 <!-- Edit Event Modal -->
-<div id="editEventModal" class="modal" style="display: none;">
-    <div class="modal-content">
+<div id="editEventModal" class="modal2">
+    <div class="modal-content2">
         <span class="close" onclick="closeEditEventModal()">&times;</span>
         <h3>Edit Event</h3>
         <form id="editEventForm" onsubmit="submitEditEventForm(event)">
@@ -129,15 +131,18 @@
             <input type="text" id="editEventName" name="eventName" required><br><br>
 
             <!-- Event Description -->
-            <label for="editEventDescription">Event Description:</label>
-            <input type="text" id="editEventDescription" name="eventDescription" required><br><br>
+          <!-- Edit Event Description Field -->
+<label2 id="editEventDescriptionLabel" for="editEventDescription">Event Description:</label2>
+<textarea id="editEventDescription" name="eventDescription" rows="5" required></textarea><br><br>
+
 
             <!-- Date and Time -->
             <label for="editEventDateTime">Date and Time:</label>
             <input type="datetime-local" id="editEventDateTime" name="eventDateTime" required><br><br>
 
             <!-- Submit Button -->
-            <input type="submit" value="Save Changes">
+            <input type="submit" class="save-changes-btn" value="Save Changes">
+
         </form>
     </div>
 </div>

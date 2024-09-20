@@ -4,7 +4,7 @@
     </div>
                
     <div class="table-container">
-    <table class="styled-table">
+    <table id="usersTable" class="styled-table">
     <thead>
         <tr>
             <th>First Name</th>
@@ -65,8 +65,8 @@
     </div>
 
           <!-- Add User Modal -->
-<div id="addUserModal" class="modal">
-    <div class="modal-content">
+<div id="addUserModal" class="modal1">
+    <div class="modal-content1">
         <span class="close" onclick="closeAddUserModal()">&times;</span>
         <h3>Add New User</h3>
         <form id="addUserForm" onsubmit="submitForm(event)">
@@ -85,7 +85,7 @@
             <label for="addUserAdposition">Position:</label>
             <input type="text" id="addUserAdposition" name="adposition" value="HEALTHWORKER" readonly><br><br>
 
-            <input type="submit" value="Add User">
+            <input type="submit" value="Create User">
         </form>
     </div>
 </div>
@@ -93,8 +93,8 @@
 
 
 <!-- Edit User Modal -->
-<div id="editUserModal" class="modal">
-    <div class="modal-content">
+<div id="editUserModal" class="modal1">
+    <div class="modal-content1">
         <span class="close" onclick="closeEditUserModal()">&times;</span>
         <h3>Edit User</h3>
         <form id="editUserForm" onsubmit="submitEditForm(event)">

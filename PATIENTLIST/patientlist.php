@@ -53,10 +53,14 @@
             // Output each patient as a table row
             if ($result->num_rows > 0) {
                 while($row = $result->fetch_assoc()) {
+                    $datetime = new DateTime($row["p_bday"]);
+            $formattedDate = $datetime->format('F j, Y');
+            $formattedTime = $datetime->format('g:i A');
+            $formattedDateTime = $formattedDate . ' ' . $formattedTime;
                     echo "<tr>
                             <td>" . $row["p_name"] . "</td>
                             <td>" . $row["p_age"] . "</td>
-                            <td>" . $row["p_bday"] . "</td>
+                            <td>" . $formattedDateTime . "</td>
                             <td>" . $row["p_address"] . "</td>
                             <td>" . $row["p_contper"] . "</td>
                             <td>" . $row["p_type"] . "</td>

@@ -3,6 +3,31 @@
     var addPatientModal = document.getElementById("addPatientModal")
     var editPatientModal = document.getElementById("editPatientModal")
 
+
+    function updateDashboard() {
+        fetch('DASHBOARD/get_dashboard_counts.php')
+        .then(response => response.text())  // Fetch the raw text response
+        .then(text => {
+            console.log('Raw Response Text:', text);  // Log the raw text for debugging
+            
+            // Parse the raw text into a JSON object
+            const data = JSON.parse(text);
+            
+            // Update the counts on the dashboard
+            document.getElementById('total-patients').textContent = data.total_patients || 0;
+            document.getElementById('total-medicines').textContent = data.total_meds || 0;
+            document.getElementById('appointments-today').textContent = data.total_appointments || 0;
+            document.getElementById('total-medications').textContent = data.total_medications || 0;
+        })
+        .catch(error => {
+            console.error('Error fetching dashboard data:', error);
+            // Fallback to '0' in case of error
+            document.getElementById('total-patients').textContent = 0;
+            document.getElementById('total-medicines').textContent = 0;
+            document.getElementById('appointments-today').textContent = 0;
+            document.getElementById('total-medications').textContent = 0;
+        });
+    }
 //PATIENTS
 function submitPatientForm(event) {
     event.preventDefault(); 
@@ -23,6 +48,7 @@ function submitPatientForm(event) {
             if (Array.isArray(data.patients)) {
 
                 updatePatientTable(data.patients);
+                updateDashboard();
             } else {
                 console.error('Expected an array of patients but got:', data.patients);
                 alert('Failed to retrieve patient data.');
@@ -41,16 +67,22 @@ function updatePatientTable(patients) {
 
     if (patients.length > 0) {
         patients.forEach(patient => {
+            // Format the birthday for display
+            const date = new Date(patient.p_bday);
+            const formattedDate = date.toLocaleDateString('en-US', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
+
             var row = document.createElement('tr');
             row.innerHTML = `
-                <td>${patient.p_name}</td>
-                <td>${patient.p_age}</td>
-                <td>${patient.p_bday}</td>
-                <td>${patient.p_address}</td>
-                <td>${patient.p_contper}</td>
-                <td>${patient.p_type}</td>
+                <td>${htmlspecialchars(patient.p_name)}</td>
+                <td>${htmlspecialchars(patient.p_age)}</td>
+                <td>${formattedDate}</td> <!-- Display formatted birthday -->
+                <td>${htmlspecialchars(patient.p_address)}</td>
+                <td>${htmlspecialchars(patient.p_contper)}</td>
+                <td>${htmlspecialchars(patient.p_type)}</td>
                 <td>
-                    <a href='#' class='edit-btn' onclick='openEditPatient(${patient.p_id}, "${patient.p_name}", "${patient.p_age}", "${patient.p_bday}", "${patient.p_address}", "${patient.p_contper}", "${patient.p_type}")'>
+                    <a href='#' class='edit-btn' onclick='openEditPatient(${patient.p_id}, "${addslashes(patient.p_name)}", "${patient.p_age}", "${patient.p_bday}", "${addslashes(patient.p_address)}", "${addslashes(patient.p_contper)}", "${addslashes(patient.p_type)}")'>
                         <img src='edit_icon.png' alt='Edit' style='width: 20px; height: 20px;'>
                     </a>
                     <a href='#' class='delete-btn' onclick='deletePatient(${patient.p_id})'>
@@ -61,8 +93,22 @@ function updatePatientTable(patients) {
             tableBody.appendChild(row);
         });
     } else {
-        tableBody.innerHTML = '<tr><td colspan="8">No patients found</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="7">No patients found</td></tr>'; // Updated colspan
     }
+}
+
+// Function to escape HTML for security
+function htmlspecialchars(str) {
+    return str.replace(/&/g, '&amp;')
+              .replace(/</g, '&lt;')
+              .replace(/>/g, '&gt;')
+              .replace(/"/g, '&quot;')
+              .replace(/'/g, '&#039;');
+}
+
+// Function to escape single quotes for JS
+function addslashes(str) {
+    return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
 
 // Function to close the add patient modal
@@ -127,6 +173,7 @@ function submitEditPatientForm(event) {
         } else {
             updatePatientTable(data.patients); 
             closeEditPatientModal(); 
+            updateDashboard();
         }
     })
     .catch(error => console.error('Error submitting form:', error)); 
@@ -156,7 +203,9 @@ function deletePatient(patientId) {
         .then(data => {
             if (data.success) {
                 updatePatientTable(data.patients); 
-                document.querySelector(`#patientRow${patientId}`).remove(); 
+                updateDashboard(); 
+                document.querySelector(`#patientRow${patientId}`).remove();
+                
             } else {
                 alert('Error: ' + data.message); 
             }

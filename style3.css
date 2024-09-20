@@ -16,16 +16,20 @@
             width: 100%;
             height: 100%;
             z-index: -10;
-            opacity: .1;
+            opacity: 0.05;
             background: url('mary.jpg') center/45% no-repeat; /* Adjust the image path and scaling */
         }
 
         header {
             background-color: #368533;
-            color: rgb(243, 239, 239);
+            color: #f3efef;
             text-align: left;
-            padding: 3px; /* Adjust the padding to make it smaller */
-            height: 50px; /* Adjust the height to make it thinner */
+            padding: 10px;
+            height: 40px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            
         }
 
         header h1 {
@@ -1697,7 +1701,7 @@ table tr:hover {
 
 #dashboard {
     padding: 20px;
-    background-color: #f7f7f7;
+    background-color: transparent;
 }
 
 .card-container {

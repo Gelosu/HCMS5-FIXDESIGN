@@ -162,13 +162,20 @@ function extractMonthFromDate(dateText) {
 
 
 
-
+// Open the Add Event Modal
 function openAddEventModal() {
     document.getElementById('addEventModal').style.display = 'block';
+    
+    // Clear the form when the modal is opened
+    document.getElementById('addEventForm').reset();
 }
 
+// Close the Add Event Modal
 function closeAddEventModal() {
     document.getElementById('addEventModal').style.display = 'none';
+    
+    // Clear the form when the modal is closed
+    document.getElementById('addEventForm').reset();
 }
 
 // ADD EVENT
@@ -186,15 +193,21 @@ function submitAddEventForm(event) {
         if (result.success) {
             console.log("Event data:", result.events);
             console.log("Years data:", result.years);
+            
+            // Close modal and reset form
             closeAddEventModal(); // Close the modal on success
             updateEventTable(result.events); // Update the table with new data
             updateYearDropdown(result.years); // Update the year dropdown
+            
+            // Optionally reset the form again after successful submission
+            document.getElementById('addEventForm').reset();
         } else {
             alert('Error: ' + result.error);
         }
     })
     .catch(error => console.error('Error:', error));
 }
+
 // Function to format date and time
 function formatDateTime(datetime) {
     const date = new Date(datetime);
@@ -336,14 +349,20 @@ function deleteEvent(eventId) {
 
 
 //USER MANAGEMENT
+//USER MANAGEMENT
 function openAddUserModal() {
     document.getElementById('addUserModal').style.display = 'block';
+    
+    // Clear the form every time the modal is opened
+    document.getElementById('addUserForm').reset();
 }
 
 function closeAddUserModal() {
     document.getElementById('addUserModal').style.display = 'none';
+    
+    // Clear the form when the modal is closed
+    document.getElementById('addUserForm').reset();
 }
-
 
 function openEditUserModal(id, adname, adsurname, adusername, adpass, adposition) {
   
@@ -380,6 +399,7 @@ function openEditUserModal(id, adname, adsurname, adusername, adpass, adposition
             
             closeAddUserModal();
             updateUserTable(result.users); 
+            document.getElementById('addUserForm').reset();
         } else {
             alert('Error: ' + result.error);
         }
@@ -422,7 +442,7 @@ function openEditUserModal(id, adname, adsurname, adusername, adpass, adposition
             <td>${user.adname}</td>
             <td>${user.adsurname}</td>
             <td>${user.adusername}</td>
-            <td>${user.adpass}</td>
+            <td>*****</td>
             <td>${user.adposition}</td>
             <td>
                 <a href='#' class='edit-btn' onclick="openEditUserModal(
@@ -430,7 +450,7 @@ function openEditUserModal(id, adname, adsurname, adusername, adpass, adposition
                     '${user.adname}',
                     '${user.adsurname}',
                     '${user.adusername}',
-                    '${user.adpass}',
+                    '*****',
                     '${user.adposition}'
                 )">
                     <img src='edit_icon.png' alt='Edit' style='width: 20px; height: 20px;'>

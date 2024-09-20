@@ -22,6 +22,7 @@ var addMedicalSupplyModal = document.getElementById("addMedicalSupplyModal"); //
                 console.log("data: ", data)
                 updateMedicalSupplyTable(data.data); 
                 closeAddMedicalSupplyModal(); 
+                updateDashboard();
             }
         })
         .catch(error => console.error('Error submitting form:', error));
@@ -121,6 +122,7 @@ var addMedicalSupplyModal = document.getElementById("addMedicalSupplyModal"); //
                 
                 updateMedicalSupplyTable(data.data); 
                 closeEditModal(); 
+                updateDashboard();
             }
         })
         .catch(error => console.error('Error submitting form:', error));
@@ -153,6 +155,7 @@ var addMedicalSupplyModal = document.getElementById("addMedicalSupplyModal"); //
                 if (data.success) {
                     alert(data.message);
                     updateMedicalSupplyTable(data.supplies);
+                    updateDashboard();
                 } else {
                     alert('Error: ' + data.message);
                 }

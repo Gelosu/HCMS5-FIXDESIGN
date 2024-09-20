@@ -35,6 +35,7 @@ var addMedicineModal = document.getElementById("addMedicineModal"); //ADD MEDICI
                 
                 // Close the modal form after successful submission
                 closeAddMedicineModal();
+                updateDashboard();
             }
         })
         .catch(error => {
@@ -43,6 +44,7 @@ var addMedicineModal = document.getElementById("addMedicineModal"); //ADD MEDICI
         });
     }
     
+    // Function to update the medicine table with new data
     function updateMedicineTable(medicines) {
         var tableBody = document.querySelector('#medTable tbody');
         tableBody.innerHTML = ''; // Clear existing table rows
@@ -50,13 +52,19 @@ var addMedicineModal = document.getElementById("addMedicineModal"); //ADD MEDICI
         if (medicines.length > 0) {
             medicines.forEach(med => {
                 var row = document.createElement('tr');
+                
+                // Format the expiration date to "September 5, 2026"
+                var expirationDate = new Date(med.stock_exp);
+                var options = { year: 'numeric', month: 'long', day: 'numeric' };
+                var formattedExpirationDate = expirationDate.toLocaleDateString('en-US', options);
+    
                 row.innerHTML = `
                     <td>${med.meds_number}</td>
                     <td>${med.meds_name}</td>
                     <td>${med.med_dscrptn}</td>
                     <td>${med.stock_in}</td>
                     <td>${med.stock_out}</td>
-                    <td>${med.stock_exp}</td>
+                    <td>${formattedExpirationDate}</td> <!-- Use formatted expiration date -->
                     <td>${med.stock_avail}</td>
                     <td class='action-icons'>
                         <a href='#' class='edit-btn' onclick="openEditMed(
@@ -84,6 +92,8 @@ var addMedicineModal = document.getElementById("addMedicineModal"); //ADD MEDICI
     }
     
 
+    
+
 
 
 function closeAddMedicineModal() {
@@ -99,17 +109,20 @@ function openAddMedicineModal() {
 }
 
 //Update MEds
-function openEditMed(medId, medName, medDesc, stockIn, stockOut, stockExpired, stockAvailable) {
+// Update Medicine
+function openEditMed(medId, medNumber, medName, medDesc, stockIn, stockOut, stockExp, stockAvailable) {
     document.getElementById('editMedId').value = medId;
+    document.getElementById('editMedNumber').value = medNumber; // Added this line
     document.getElementById('editMedName').value = medName;
     document.getElementById('editMedDesc').value = medDesc;
     document.getElementById('editStockIn').value = stockIn;
     document.getElementById('editStockOut').value = stockOut;
-    document.getElementById('editStockExp').value = stockExpired;
+    document.getElementById('editStockExp').value = stockExp; // Ensure this is a date format
     document.getElementById('editStockAvail').value = stockAvailable;
 
     document.getElementById('editMedicineModal').style.display = 'block';
 }
+
 
 // Function to close the edit medicine modal
 function closeEditMedModal() {
@@ -138,6 +151,7 @@ function submitEditMedicineForm(event) {
             // Update table with the correct data field
             updateMedicineTable(data.medicines); 
             closeEditMedModal();  
+            updateDashboard();
         }
     })
     .catch(error => console.error('Error submitting form:', error));
@@ -172,7 +186,9 @@ function deleteMedicine(medId) {
         .then(data => {
             if (data.success) {
                 updateMedicineTable(data.medicines); 
+                updateDashboard();
                 document.querySelector(`#medRow${medId}`).remove(); 
+               
             } else {
                 alert('Error: ' + data.message);
             }

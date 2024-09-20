@@ -141,6 +141,22 @@ window.onload = function() {
 };
 
 
+//MEDICINE LIST
+function fetchMedicines() {
+    fetch('MEDICINES/fetch_medicine.php') // Adjust the path as necessary
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                console.log(result.data)
+                updateMedicineTable(result.data); // Call the function to update the table
+            } else {
+                console.error('Error fetching medicines:', result.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+}
+
+fetchMedicines()
 //DASHBOARD
 function updateDashboard() {
     fetch('DASHBOARD/get_dashboard_counts.php')
@@ -233,7 +249,8 @@ function submitAddAppointmentForm(event) {
     .then(result => {
         if (result.success) {
             closeAddAppointmentModal();
-            updateAppointmentTable(result.data); // Refresh the table with the updated data
+            updateAppointmentTable(result.data);
+            updateDashboard(); // Refresh the table with the updated data
         } else {
             alert('Error: ' + result.error);
         }
@@ -334,6 +351,7 @@ function submitEditAppointmentForm(event) {
             const response = JSON.parse(xhr.responseText);
             if (response.success) {
                 updateAppointmentTable(response.appointments);
+                updateDashboard();
                 alert(response.message);
                 document.getElementById('editAppointmentModal').style.display = 'none';
             } else {
@@ -374,6 +392,7 @@ function deleteAppointment(appointmentId) {
         .then(data => {
             if (data.success) {
                 updateAppointmentTable(data.appointments); // Refresh the table
+                updateDashboard();
             } else {
                 alert('Error: ' + data.message);
             }
