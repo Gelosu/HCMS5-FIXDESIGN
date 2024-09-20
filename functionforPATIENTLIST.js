@@ -38,28 +38,33 @@ function submitPatientForm(event) {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json()) 
-    .then(data => {
-        console.log('Success:', data);
-        if (data.error) {
-            alert('Error: ' + data.error);
-        } else {
-
-            if (Array.isArray(data.patients)) {
-
-                updatePatientTable(data.patients);
-                updateDashboard();
+    .then(response => response.text()) // Change to response.text()
+    .then(text => {
+        console.log('Success:', text);
+        
+        try {
+            const data = JSON.parse(text); // Parse the text response to JSON
+            if (data.error) {
+                alert('Error: ' + data.error);
             } else {
-                console.error('Expected an array of patients but got:', data.patients);
-                alert('Failed to retrieve patient data.');
+                if (Array.isArray(data.patients)) {
+                    updatePatientTable(data.patients);
+                    updateDashboard();
+                } else {
+                    console.error('Expected an array of patients but got:', data.patients);
+                    alert('Failed to retrieve patient data.');
+                }
+                closeAddPatientModal();
             }
-            closeAddPatientModal();
+        } catch (e) {
+            console.error('Parsing error:', e);
+            alert('Failed to parse response. Please try again.');
         }
     })
     .catch(error => console.error('Error submitting form:', error));
 }
 
-
+// Function to update the patient table with new data
 // Function to update the patient table with new data
 function updatePatientTable(patients) {
     var tableBody = document.querySelector('#patientTable tbody');
@@ -79,10 +84,12 @@ function updatePatientTable(patients) {
                 <td>${htmlspecialchars(patient.p_age)}</td>
                 <td>${formattedDate}</td> <!-- Display formatted birthday -->
                 <td>${htmlspecialchars(patient.p_address)}</td>
+                <td>${htmlspecialchars(patient.p_contnum)}</td> <!-- Updated contact number -->
                 <td>${htmlspecialchars(patient.p_contper)}</td>
+                <td>${htmlspecialchars(patient.p_contnumper)}</td> <!-- Updated contact person number -->
                 <td>${htmlspecialchars(patient.p_type)}</td>
                 <td>
-                    <a href='#' class='edit-btn' onclick='openEditPatient(${patient.p_id}, "${addslashes(patient.p_name)}", "${patient.p_age}", "${patient.p_bday}", "${addslashes(patient.p_address)}", "${addslashes(patient.p_contper)}", "${addslashes(patient.p_type)}")'>
+                    <a href='#' class='edit-btn' onclick='openEditPatient(${patient.p_id}, "${addslashes(patient.p_name)}", "${patient.p_age}", "${patient.p_bday}", "${addslashes(patient.p_address)}", "${addslashes(patient.p_contnum)}", "${addslashes(patient.p_contper)}", "${addslashes(patient.p_contnumper)}", "${addslashes(patient.p_type)}")'>
                         <img src='edit_icon.png' alt='Edit' style='width: 20px; height: 20px;'>
                     </a>
                     <a href='#' class='delete-btn' onclick='deletePatient(${patient.p_id})'>
@@ -93,12 +100,14 @@ function updatePatientTable(patients) {
             tableBody.appendChild(row);
         });
     } else {
-        tableBody.innerHTML = '<tr><td colspan="7">No patients found</td></tr>'; // Updated colspan
+        tableBody.innerHTML = '<tr><td colspan="8">No patients found</td></tr>'; // Updated colspan
     }
 }
 
 // Function to escape HTML for security
+// Function to escape HTML for security
 function htmlspecialchars(str) {
+    if (str === undefined || str === null) return ''; // Return an empty string for undefined or null
     return str.replace(/&/g, '&amp;')
               .replace(/</g, '&lt;')
               .replace(/>/g, '&gt;')
@@ -111,12 +120,15 @@ function addslashes(str) {
     return str.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
 
+
 // Function to close the add patient modal
 function closeAddPatientModal() {
+    var addPatientModal = document.getElementById('addPatientModal'); // Ensure you have this element
     if (addPatientModal) {
         addPatientModal.style.display = 'none';
     }
 }
+
 
 // Function to open the add patient modal
 function openAddPatientModal() {
@@ -128,19 +140,22 @@ function openAddPatientModal() {
 
 //UPDATE FUNCTION
 // Function to open the edit patient modal and populate it with data
-function openEditPatient(patientId, name, age, birthday, address, contactPerson, type) {
+function openEditPatient(patientId, name, age, birthday, address, contactNumber, contactPerson, contactPersonNumber, type) {
     document.getElementById('editPatientId').value = patientId;
     document.getElementById('editName').value = name;
     document.getElementById('editAge').value = age;
     document.getElementById('editBirthday').value = birthday;
     document.getElementById('editAddress').value = address;
+    document.getElementById('editContactNumber').value = contactNumber; // Added contact number
     document.getElementById('editContactPerson').value = contactPerson;
+    document.getElementById('editContactPersonNumber').value = contactPersonNumber; // Added contact person number
     document.getElementById('editType').value = type;
 
     // Show the modal
     var editPatientModal = document.getElementById('editPatientModal');
     editPatientModal.style.display = 'block';
 }
+
 
 // Function to close the edit patient modal
 function closeEditPatientModal() {

@@ -21,12 +21,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $age = $_POST['age'];
     $bday = $_POST['birthday']; // Updated to match form field name
     $address = $_POST['address'];
+    $contact_number = $_POST['contactNumber']; // New field for contact number
     $contact_person = $_POST['contactPerson']; // Updated to match form field name
+    $contact_person_number = $_POST['contactPersonNumber']; // New field for contact person number
     $type = $_POST['type'];
 
     // Prepare and execute update query
-    $stmt = $conn->prepare("UPDATE patient SET p_name=?, p_age=?, p_bday=?, p_address=?, p_contper=?, p_type=? WHERE p_id=?");
-    $stmt->bind_param("ssssssi", $name, $age, $bday, $address, $contact_person, $type, $patient_id);
+    $stmt = $conn->prepare("UPDATE patient SET p_name=?, p_age=?, p_bday=?, p_address=?, p_contnum=?, p_contper=?, p_contnumper=?, p_type=? WHERE p_id=?");
+    $stmt->bind_param("ssssssssi", $name, $age, $bday, $address, $contact_number, $contact_person, $contact_person_number, $type, $patient_id);
 
     if ($stmt->execute()) {
         // Fetch the latest patient data

@@ -156,7 +156,7 @@ function fetchMedicines() {
         .catch(error => console.error('Error:', error));
 }
 
-fetchMedicines()
+
 //DASHBOARD
 function updateDashboard() {
     fetch('DASHBOARD/get_dashboard_counts.php')

@@ -1,6 +1,5 @@
 <?php
-include '../connect.php';
-// Include database connection
+include '../connect.php'; // Include database connection
 
 header('Content-Type: application/json'); // Set content type to JSON
 
@@ -13,13 +12,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $p_age = $_POST['p_age'];
     $p_bday = $_POST['p_bday'];
     $p_address = $_POST['p_address'];
+    $p_contnum = $_POST['p_contnum']; // New contact number field
     $p_contper = $_POST['p_contper'];
+    $p_contnumper = $_POST['p_contnumper']; // New contact person number field
     $p_type = $_POST['p_type'];
 
     // Prepare and execute insert query
-    $sql = "INSERT INTO patient (p_name, p_age, p_bday, p_address, p_contper, p_type) VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO patient (p_name, p_age, p_bday, p_address, p_contnum, p_contper, p_contnumper, p_type) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssss", $p_name, $p_age, $p_bday, $p_address, $p_contper, $p_type);
+    $stmt->bind_param("ssssssss", $p_name, $p_age, $p_bday, $p_address, $p_contnum, $p_contper, $p_contnumper, $p_type);
 
     if ($stmt->execute()) {
         $response['success'] = true;
